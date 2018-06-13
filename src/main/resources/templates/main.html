@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Книгохранилище</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+
+<body>
+
+<h3>Добавить книгу</h3>
+<table border="1">
+    <tr>
+    <form method="post" action="add">
+        <td><input type="text" name="title" placeholder="Введите название" /></td>
+        <td><input type="text" name="description" placeholder="Описание"></td>
+        <td><input type="text" name="author" placeholder="Автор"></td>
+        <td><input type="text" name="isbn" placeholder="ISBN"></td>
+        <td><input type="number" name="printYear" placeholder="Год издания"></td>
+        <td><button type="submit">Добавить</button></td>
+    </form>
+    </tr>
+</table>
+
+<h3>Поиск книг</h3>
+<form method="post" action="search">
+    <input type="text" name="search"/>
+    <select class="form-control" name="item">
+        <option value="title">Название</option>
+        <option value="author">Автор</option>
+    </select>
+    <input type="checkbox" id="searchReadAlready" name="searchAlready" >
+    <label for="searchReadAlready">Прочитана</label>
+    <button type="submit">Найти</button>
+</form>
+
+<h2>Список книг</h2>
+
+<table th:object="${books}" id="BooksTable" border="1" >
+    <tr>
+        <th>ID</th>
+        <th>Название</th>
+        <th>Описание</th>
+        <th>Автор</th>
+        <th>ISBN</th>
+        <th>Год издания</th>
+        <th>Прочитана</th>
+        <th>Обновить</th>
+        <th>Удалить</th>
+    </tr>
+    <tr th:each="book : ${books}">
+        <form method="post" action="update">
+            <input type="hidden" name="id" th:value="${book.id}"/>
+            <td align="center" th:text="${book.id}" id="id" width="30"></td>
+            <td> <input type="text" name="title" th:value="${book.title}"/></td>
+            <td> <input type="text" name="description" th:value="${book.description}"/></td>
+            <td th:text="${book.author}" th:name="author" width="150"></td>
+            <td> <input type="text" name="isbn" th:value="${book.isbn}"/></td>
+            <td> <input type="number" name="printYear" th:value="${book.printYear}"/></td>
+            <td align="center"><div th:switch="${book.readAlready}" th:name="readAlready">
+                <i th:case="true" th:width="50">Да</i>
+                <a th:case="false" th:href="@{/read/{id}(id=${book.id})}" th:width="50">Нет</a>
+            </div></td>
+            <td><button type="submit" >обновить</button></td>
+            <td> <a th:href="@{/remove/{id}(id=${book.id})}" th:width="50">удалить</a></td>
+        </form>
+    </tr>
+</table>
+
+<div style="margin-left: 350px; margin-top: 25px" >
+    <a href="/previous">предыдущая</a>
+    <a href="/next" style="margin-left: 30px">следующая</a>
+</div>
+
+</body>
+</html>
